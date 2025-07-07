@@ -1,0 +1,509 @@
+{
+  "name": "Birthday Wishes Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1bkJFIIVUCYl4baRwSYTff1dLDItD6wLj3Dk6_L0r_7c",
+          "mode": "list",
+          "cachedResultName": "Birthday_List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bkJFIIVUCYl4baRwSYTff1dLDItD6wLj3Dk6_L0r_7c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1496442484,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bkJFIIVUCYl4baRwSYTff1dLDItD6wLj3Dk6_L0r_7c/edit#gid=1496442484"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "dob(DD-MM)",
+              "lookupValue": "={{ $now.setZone(\"Asia/Kolkata\").toFormat(\"dd-MM\") }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -440,
+        -60
+      ],
+      "id": "e8b0a2e1-ccdf-4802-9ed1-4ec8f42323dc",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "a82SYFHgzGp5bQPl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "20f107ce-36ed-4477-8965-2330af739503",
+              "leftValue": "={{ $json[\"client(A/B)\"] }}",
+              "rightValue": "A",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -220,
+        -60
+      ],
+      "id": "8e04d5d8-aca3-41f9-b342-152d2d277084",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "659047337296115",
+        "recipientPhoneNumber": "916282071723",
+        "textBody": "=Happy birthday {{ $json[\"name \"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -260
+      ],
+      "id": "4cb0b921-d80b-4bf7-8b94-2c962e3fa860",
+      "name": "WhatsApp A",
+      "webhookId": "c61626b1-a216-44d8-bf39-55e0da1d4be3",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "MhipCtrsGAkNAc7V",
+          "name": "WhatsApp Client A"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "659047337296115",
+        "recipientPhoneNumber": "916282071723",
+        "textBody": "=Happy Birthday  {{ $json[\"name \"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        100,
+        40
+      ],
+      "id": "f0bd766f-109f-462e-b326-7c03ad242d38",
+      "name": "WhatsApp B",
+      "webhookId": "07671ac4-40ad-48fa-93cc-0d0c0c898194",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0J3V5j5WteKIvkTH",
+          "name": "WhatsApp Client B"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg",
+          "mode": "list",
+          "cachedResultName": "Logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cilent A/B": "={{ $('If').item.json[\"client(A/B)\"] }}",
+            "Date and Time": "={{ $now.setZone(\"Asia/Kolkata\").toFormat(\"dd-MM-yyyy HH:mm\") }}\n",
+            "Name": "={{ $('If').item.json[\"name \"] }}",
+            "Message_id": "={{ $json.messages[0].id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "Date and Time",
+              "displayName": "Date and Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cilent A/B",
+              "displayName": "Cilent A/B",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message_id",
+              "displayName": "Message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        340,
+        40
+      ],
+      "id": "a7a2ecbe-f69e-416d-a3da-5511703c33a9",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "a82SYFHgzGp5bQPl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg",
+          "mode": "list",
+          "cachedResultName": "Logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cilent A/B": "={{ $('If').item.json[\"client(A/B)\"] }}",
+            "Date and Time": "={{ $now.setZone(\"Asia/Kolkata\").toFormat(\"dd-MM-yyyy HH:mm\") }}\n",
+            "Name": "={{ $('If').item.json[\"name \"] }}",
+            "Message_id": "={{ $json.messages[0].id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "Date and Time",
+              "displayName": "Date and Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cilent A/B",
+              "displayName": "Cilent A/B",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message_id",
+              "displayName": "Message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        340,
+        -260
+      ],
+      "id": "f28eea7e-0231-41f5-b033-071037897234",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "a82SYFHgzGp5bQPl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        620,
+        -140
+      ],
+      "id": "aed1ae2f-d68c-4db0-b145-ff2a72cdabd3",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg",
+          "mode": "list",
+          "cachedResultName": "Logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1205577060,
+          "mode": "list",
+          "cachedResultName": "Errors",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xpr7GUBehwrv7IE6wyx9Bcy7BnhGMhMAaKLF4UX0rCg/edit#gid=1205577060"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time": "={{ $now.setZone(\"Asia/Kolkata\").toFormat(\"dd-MM-yyyy HH:mm\") }}\n",
+            "Workflow": "={{ $json.workflow.name }}",
+            "Error Message": "={{ $json.execution.error.message }}",
+            "Last Node Executed": "={{ $json.execution.lastNodeExecuted }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Node Executed",
+              "displayName": "Last Node Executed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        780,
+        -140
+      ],
+      "id": "61f1bcbb-073a-443b-bf61-c5b118f27fdb",
+      "name": "Google Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "a82SYFHgzGp5bQPl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 30 3 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        -60
+      ],
+      "id": "b36a906f-0d01-48d7-9be4-44776a50744f",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp A",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp B",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp A": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp B": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3d448a75-c6c6-4a74-adb5-d1c65b464e89",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8004a49843c5f6ffd2f1c6d98023fb3bab0d4256c07b804b76c09f8213d907d4"
+  },
+  "id": "IDM6oNUV0QllcxmT",
+  "tags": []
+}
